@@ -1,5 +1,5 @@
 def main():
-    book_path = "/home/jesham/workspace/github.com/jonjonjesham/bookbot/books/frankenstein.txt"
+    book_path = "../books/frankenstein.txt"
     book_file = book_path.split("/")[-1]
     text = get_book_text(book_path)
     word_count = get_word_count(text)
