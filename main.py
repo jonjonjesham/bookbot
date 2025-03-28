@@ -1,43 +1,40 @@
+import sys
+
+from stats import (
+    get_word_count,
+    get_char_count,
+    sort_chars,
+)
+
 def main():
-    book_path = "../books/frankenstein.txt"
-    book_file = book_path.split("/")[-1]
-    text = get_book_text(book_path)
-    word_count = get_word_count(text)
-    char_count = get_character_count(text)
-    word_dict = convert_dict(char_count)
-    word_dict.sort(reverse=True, key=sort_on)
-    print(f"--- Begin report of {book_file} ---")
-    print(f"{word_count} words found in the document")
-    print_report(word_dict)
-    print("--- End report ---")
+    if len(sys.argv) != 2:
+        print("Usage: python3 main.py <path_to_book>")
+        sys.exit(1)
+    
+    book_path = sys.argv[1]
+    book_text = get_book_text(book_path)
+    word_count = get_word_count(book_text)
+    char_count = get_char_count(book_text)
+    sorted_list = sort_chars(char_count)
 
-def get_book_text(path):
-    with open(path) as f:
-        return f.read()
+    print_report(book_path, word_count, sorted_list)
+    
+def get_book_text(file):
+    with open(file) as f:
+        file_contents = f.read()
+        return file_contents
 
-def get_word_count(text):
-    words = text.split()
-    return len(words)
+def print_report(book_path, word_count, sorted_list):
+    print("============ BOOKBOT ============")
+    print(f"Analyzing book found at {book_path}...")
+    print("----------- Word Count ----------")
+    print(f"Found {word_count} total words")
+    print("--------- Character Count -------")
+    for item in sorted_list:
+        if not item["char"].isalpha():
+            continue
+        print(f"{item['char']}: {item['num']}")
 
-def get_character_count(text):
-    lowered_text = text.lower()
-    char_count = {}
-    for char in lowered_text:
-        if char.isalpha():        
-            if char in char_count and char:
-                char_count[char] += 1
-            else:
-                char_count[char] = 1
-    return char_count
-
-def print_report(dicts):
-    for dict in dicts:
-        print(f'The \'{dict["letter"]}\' character was found {dict["num"]} times')
-        
-def convert_dict(dict):
-    return [{"letter": key, "num": value} for key, value in dict.items()]
-
-def sort_on(dict):
-    return dict["num"]
+    print("============= END ===============")
 
 main()
